@@ -1,0 +1,7 @@
+.vscode/extensions/
+media/
+.env
+logs/
+db.sqlite3
+staticfiles/
+*.mo

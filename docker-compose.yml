@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  b2b:
+    image: b2b
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+    volumes:
+      - media_volume:/app/media
+    env_file:
+      - .env
+    depends_on:
+      - postgresdb
+    command: >
+      sh -c "python manage.py migrate &&
+            python manage.py compilemessages &&
+            python manage.py runserver 0.0.0.0:8000"
+  postgresdb:
+    image: postgres:16.3
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # don't expose db port for production
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+
+volumes:
+  pgdata:
+  media_volume:
