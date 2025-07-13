@@ -19,7 +19,7 @@ services:
             python manage.py compilemessages &&
             python manage.py runserver 0.0.0.0:8000"
   postgresdb:
-    image: postgres:16.3
+    image: postgres:17.5
     volumes:
       - pgdata:/var/lib/postgresql/data
     # don't expose db port for production
