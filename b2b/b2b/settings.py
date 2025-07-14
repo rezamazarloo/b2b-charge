@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # third party apps
+    "rest_framework",
+    "drf_spectacular",
     # project apps
     "finance",
     "inventory",
@@ -174,4 +177,8 @@ LOGGING = {
             "propagate": False,
         },
     },
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }

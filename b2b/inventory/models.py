@@ -1,20 +1,6 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 from decimal import Decimal
-
-
-def validate_sim_number(value):
-    """
-    Validate that the SIM number starts with 09 and is exactly 11 characters long.
-    """
-    if not value.startswith("09"):
-        raise ValidationError("SIM number must start with 09")
-
-    if len(value) != 11:
-        raise ValidationError("SIM number must be exactly 11 characters long")
-
-    if not value.isdigit():
-        raise ValidationError("SIM number must contain only digits")
+from .validators import validate_sim_number
 
 
 class SimCard(models.Model):
