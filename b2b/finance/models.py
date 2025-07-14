@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from decimal import Decimal
 from inventory.models import SimCard
@@ -32,20 +32,64 @@ class CreditRequest(models.Model):
     def __str__(self):
         return f"id({self.pk}) - {self.amount} - {self.get_status_display()}"
 
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            # create object
+            super().save(*args, **kwargs)
+            return
 
-class Transaction(models.Model):
+        old_instance = CreditRequest.objects.only("status", "is_processed").filter(pk=self.pk).first()
+
+        if (
+            old_instance
+            and old_instance.status == self.StatusChoices.PENDING
+            and self.status == self.StatusChoices.COMPLETE
+            and not old_instance.is_processed
+        ):
+            with transaction.atomic():
+                locked_self = CreditRequest.objects.select_for_update().get(pk=self.pk)
+
+                if (
+                    locked_self.status == self.StatusChoices.PENDING
+                    and self.status == self.StatusChoices.COMPLETE
+                    and not locked_self.is_processed
+                ):
+
+                    super().save(*args, **kwargs)
+                    user = User.objects.select_for_update().get(pk=self.user.pk)
+                    user.balance += self.amount
+                    user.save(update_fields=["balance"])
+
+                    TransactionHistory.objects.create(
+                        seller=user,
+                        credit_request=self,
+                        amount=self.amount,
+                        type=TransactionHistory.TypeChoices.BALANCE_TOP_UP,
+                    )
+
+                    # Mark as processed
+                    self.is_processed = True
+                    super().save(update_fields=["is_processed"])
+                else:
+                    # If race condition caused re-check to fail, just save normally
+                    super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
+
+
+class TransactionHistory(models.Model):
     class TypeChoices(models.TextChoices):
         BALANCE_TOP_UP = "balance_top_up", "افزایش موجودی حساب"
         SIMCARD_CHARGE = "simcard_charge", "شارژ سیم کارت"
 
     seller = models.ForeignKey(
-        User, verbose_name="کاربر فروشنده", on_delete=models.CASCADE, related_name="seller_transactions"
+        User, verbose_name="کاربر فروشنده", on_delete=models.CASCADE, related_name="seller_transactions_history"
     )
     simcard = models.ForeignKey(
         SimCard,
         on_delete=models.SET_NULL,
         verbose_name="شماره سیم کارت",
-        related_name="simcard_transactions",
+        related_name="simcard_transactions_history",
         null=True,
         blank=True,
         default=None,
@@ -54,7 +98,7 @@ class Transaction(models.Model):
         CreditRequest,
         on_delete=models.SET_NULL,
         verbose_name="درخواست اعتبار",
-        related_name="credit_request_transaction",
+        related_name="credit_request_transaction_history",
         null=True,
         blank=True,
         default=None,

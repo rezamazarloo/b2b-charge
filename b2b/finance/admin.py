@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import CreditRequest, Transaction
+from .models import CreditRequest, TransactionHistory
 
 
 # Register your models here.
@@ -30,8 +30,8 @@ class CreditRequestAdmin(admin.ModelAdmin):
     colored_status.admin_order_field = "status"
 
 
-@admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
+@admin.register(TransactionHistory)
+class TransactionHistoryAdmin(admin.ModelAdmin):
     list_display = ("id", "amount", "seller__email", "colored_type", "created_at")
     list_filter = ("type",)
     search_fields = ("id", "seller__first_name", "seller__last_name", "seller__email")
