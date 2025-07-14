@@ -124,7 +124,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    balance = models.DecimalField(_("balance"), max_digits=12, decimal_places=0, default=0)
+    balance = models.DecimalField(_("balance"), max_digits=12, decimal_places=0, default=0, help_text="تومان")
     email = models.EmailField(_("email address"), unique=True)
     email_verify = models.BooleanField(
         default=False,
