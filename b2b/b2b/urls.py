@@ -6,6 +6,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/finance/", include("finance.urls", namespace="finance")),
+    path("api/simcards/", include("inventory.urls", namespace="inventory")),
 ]
 
 if settings.DEBUG:

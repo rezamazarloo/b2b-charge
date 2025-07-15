@@ -32,7 +32,7 @@ class CreditRequestAdmin(admin.ModelAdmin):
 
 @admin.register(TransactionHistory)
 class TransactionHistoryAdmin(admin.ModelAdmin):
-    list_display = ("id", "amount", "seller__email", "colored_type", "created_at")
+    list_display = ("id", "colored_amount", "seller__email", "colored_type", "created_at")
     list_filter = ("type",)
     search_fields = ("id", "seller__first_name", "seller__last_name", "seller__email")
     ordering = ("-created_at",)
@@ -52,3 +52,17 @@ class TransactionHistoryAdmin(admin.ModelAdmin):
 
     colored_type.short_description = "نوع تراکنش"
     colored_type.admin_order_field = "type"
+
+    def colored_amount(self, obj):
+        if obj.type == TransactionHistory.TypeChoices.BALANCE_TOP_UP:
+            color = "#259543"
+        elif obj.type == TransactionHistory.TypeChoices.SIMCARD_CHARGE:
+            color = "#DD1111"
+        else:
+            color = "black"
+
+        formatted_amount = f"{obj.amount:,.0f}"  # format with comma, no decimals
+        return format_html('<strong style="color:{};">{}</strong>', color, formatted_amount)
+
+    colored_amount.short_description = "مبلغ"
+    colored_amount.admin_order_field = "amount"

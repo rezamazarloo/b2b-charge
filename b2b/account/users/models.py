@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.apps import apps
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 
 
 # Create your models here.
@@ -124,7 +126,14 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    balance = models.DecimalField(_("balance"), max_digits=12, decimal_places=0, default=0, help_text="تومان")
+    balance = models.DecimalField(
+        _("balance"),
+        max_digits=12,
+        decimal_places=0,
+        default=0,
+        help_text="تومان",
+        validators=[MinValueValidator(Decimal("0"))],
+    )
     email = models.EmailField(_("email address"), unique=True)
     email_verify = models.BooleanField(
         default=False,
