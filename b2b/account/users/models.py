@@ -131,7 +131,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_digits=12,
         decimal_places=0,
         default=0,
-        help_text="تومان",
+        help_text=_("toman"),
         validators=[MinValueValidator(Decimal("0"))],
     )
     email = models.EmailField(_("email address"), unique=True)

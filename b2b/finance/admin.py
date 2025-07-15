@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import CreditRequest, TransactionHistory
+from django.utils.translation import gettext_lazy as _
 
 
 # Register your models here.
@@ -26,7 +27,7 @@ class CreditRequestAdmin(admin.ModelAdmin):
             obj.get_status_display(),
         )
 
-    colored_status.short_description = "وضعیت"
+    colored_status.short_description = _("status")
     colored_status.admin_order_field = "status"
 
 
@@ -50,7 +51,7 @@ class TransactionHistoryAdmin(admin.ModelAdmin):
             obj.get_type_display(),
         )
 
-    colored_type.short_description = "نوع تراکنش"
+    colored_type.short_description = _("transaction type")
     colored_type.admin_order_field = "type"
 
     def colored_amount(self, obj):
@@ -64,5 +65,5 @@ class TransactionHistoryAdmin(admin.ModelAdmin):
         formatted_amount = f"{obj.amount:,.0f}"  # format with comma, no decimals
         return format_html('<strong style="color:{};">{}</strong>', color, formatted_amount)
 
-    colored_amount.short_description = "مبلغ"
+    colored_amount.short_description = _("amount")
     colored_amount.admin_order_field = "amount"

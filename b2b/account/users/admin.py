@@ -34,6 +34,6 @@ class CustomUserAdmin(UserAdmin):
 
     ordering = ("-date_joined",)
 
-    @admin.display(description="نام و نام خانوادگی")
+    @admin.display(description=_("full name"))
     def display_full_name(self, obj):
         return obj.get_full_name()

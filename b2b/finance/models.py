@@ -1,5 +1,6 @@
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
 from inventory.models import SimCard
 
@@ -12,18 +13,22 @@ class CreditRequest(models.Model):
         COMPLETE = "complete", "تکمیل شده"
         REJECT = "reject", "رد شده"
 
-    user = models.ForeignKey(User, verbose_name="کاربر", on_delete=models.CASCADE, related_name="user_credit_requests")
-    amount = models.DecimalField(verbose_name="مبلغ درخواستی", max_digits=12, decimal_places=0, help_text="تومان")
-    status = models.CharField(
-        verbose_name="وضعیت درخواست", max_length=8, choices=StatusChoices.choices, default=StatusChoices.PENDING
+    user = models.ForeignKey(
+        User, verbose_name=_("user"), on_delete=models.CASCADE, related_name="user_credit_requests"
     )
-    is_processed = models.BooleanField(verbose_name="وضعیت پردازش", default=False)
-    created_at = models.DateTimeField(verbose_name="تاریخ ایجاد", auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name="تاریخ بروزرسانی", auto_now=True)
+    amount = models.DecimalField(
+        verbose_name=_("requested amount"), max_digits=12, decimal_places=0, help_text=_("toman")
+    )
+    status = models.CharField(
+        verbose_name=_("request status"), max_length=8, choices=StatusChoices.choices, default=StatusChoices.PENDING
+    )
+    is_processed = models.BooleanField(verbose_name=_("process status"), default=False)
+    created_at = models.DateTimeField(verbose_name=_("create date"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("update date"), auto_now=True)
 
     class Meta:
-        verbose_name = "درخواست اعتبار"
-        verbose_name_plural = "درخواست های اعتبار"
+        verbose_name = _("credit request")
+        verbose_name_plural = _("credit requests")
         ordering = ["-created_at"]
         indexes = [
             models.Index(fields=["-created_at"]),
@@ -83,12 +88,12 @@ class TransactionHistory(models.Model):
         SIMCARD_CHARGE = "simcard_charge", "شارژ سیم کارت"
 
     seller = models.ForeignKey(
-        User, verbose_name="کاربر فروشنده", on_delete=models.CASCADE, related_name="seller_transactions_history"
+        User, verbose_name=_("seller user"), on_delete=models.CASCADE, related_name="seller_transactions_history"
     )
     simcard = models.ForeignKey(
         SimCard,
         on_delete=models.SET_NULL,
-        verbose_name="شماره سیم کارت",
+        verbose_name=_("simcard number"),
         related_name="simcard_transactions_history",
         null=True,
         blank=True,
@@ -97,20 +102,20 @@ class TransactionHistory(models.Model):
     credit_request = models.OneToOneField(
         CreditRequest,
         on_delete=models.SET_NULL,
-        verbose_name="درخواست اعتبار",
+        verbose_name=_("credit request"),
         related_name="credit_request_transaction_history",
         null=True,
         blank=True,
         default=None,
     )
-    amount = models.DecimalField(verbose_name="مبلغ", max_digits=12, decimal_places=0, help_text="تومان")
-    type = models.CharField(verbose_name="نوع تراکنش", max_length=15, choices=TypeChoices.choices)
-    created_at = models.DateTimeField(verbose_name="تاریخ ایجاد", auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name="تاریخ بروزرسانی", auto_now=True)
+    amount = models.DecimalField(verbose_name=_("amount"), max_digits=12, decimal_places=0, help_text=_("toman"))
+    type = models.CharField(verbose_name=_("transaction type"), max_length=15, choices=TypeChoices.choices)
+    created_at = models.DateTimeField(verbose_name=_("create date"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("update date"), auto_now=True)
 
     class Meta:
-        verbose_name = "تراکنش"
-        verbose_name_plural = "تراکنش ها"
+        verbose_name = _("transaction")
+        verbose_name_plural = _("transactions")
         ordering = ["-created_at"]
         indexes = [
             models.Index(fields=["type"]),

@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 def validate_sim_number(value):
@@ -6,10 +7,10 @@ def validate_sim_number(value):
     Validate that the SIM number starts with 09 and is exactly 11 characters long.
     """
     if not value.startswith("09"):
-        raise ValidationError("شماره سیم کارت باید با 09 شروع شود.")
+        raise ValidationError(_("SIM number must start with '09'."))
 
     if len(value) != 11:
-        raise ValidationError("شماره سیم کارت باید 11 رقم باشد.")
+        raise ValidationError(_("SIM number must be exactly 11 characters long."))
 
     if not value.isdigit():
-        raise ValidationError("شماره سیم کارت باید فقط شامل اعداد باشد.")
+        raise ValidationError(_("SIM number must contain only digits."))

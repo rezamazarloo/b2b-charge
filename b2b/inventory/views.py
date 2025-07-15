@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .models import SimCard
 from finance.models import TransactionHistory
+from django.utils.translation import gettext_lazy as _
 from .serializers import SimCardChargeSerializer
 
 User = get_user_model()
@@ -31,7 +32,7 @@ class SimCardChargeAPIView(APIView):
                 simcard = SimCard.objects.select_for_update().filter(number=simcard_number).first()
 
                 if user.balance < amount:
-                    raise ValidationError({"amount": "موجودی حساب کافی نیست."})
+                    raise ValidationError({"amount": _("insufficient account balance")})
 
                 # Update user balance
                 user.balance -= amount
@@ -48,7 +49,7 @@ class SimCardChargeAPIView(APIView):
 
                 return Response(
                     {
-                        "message": "شماره سیم کارت با موفقیت شارژ شد.",
+                        "message": _("successfully charged simcard"),
                         "simcard_number": simcard.number,
                         "user_balance": user.balance,
                         "simcard_balance": simcard.balance,
