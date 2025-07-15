@@ -3,7 +3,7 @@ from rest_framework import serializers
 from inventory.models import SimCard
 from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
-from .validators import validate_sim_number
+from utils.validators import validate_sim_number
 
 
 class SimCardChargeSerializer(serializers.Serializer):

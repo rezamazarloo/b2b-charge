@@ -167,22 +167,22 @@ LOGGING = {
             "format": "{levelname} {asctime} {module} {message}",
             "style": "{",
         },
-        "transaction_log": {
+        "simcard_charge_log": {
             "format": "{levelname} {asctime} {message}",
             "style": "{",
         },
     },
     "handlers": {
-        "transaction_file": {
+        "simcard_charge_file": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs/transaction.log",
-            "formatter": "transaction_log",
+            "filename": BASE_DIR / "logs/simcard_charge.log",
+            "formatter": "simcard_charge_log",
         },
     },
     "loggers": {
-        "transaction_logger": {
-            "handlers": ["transaction_file"],
+        "simcard_charge_logger": {
+            "handlers": ["simcard_charge_file"],
             "level": "INFO",
             "propagate": False,
         },

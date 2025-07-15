@@ -10,6 +10,7 @@ from .models import SimCard
 from finance.models import TransactionHistory
 from django.utils.translation import gettext_lazy as _
 from .serializers import SimCardChargeSerializer
+from utils.logger import SimCardChargeLogger
 
 User = get_user_model()
 
@@ -24,11 +25,13 @@ class SimCardChargeAPIView(APIView):
 
         amount = serializer.validated_data["amount"]
         simcard_number = serializer.validated_data["simcard_number"]
+        user_id = request.user.pk
 
+        SimCardChargeLogger.log_start(user_id, amount, simcard_number)
         try:
             with transaction.atomic():
                 # Lock the user and simcard to prevent race conditions
-                user = User.objects.select_for_update().get(pk=request.user.pk)
+                user = User.objects.select_for_update().get(pk=user_id)
                 simcard = SimCard.objects.select_for_update().filter(number=simcard_number).first()
 
                 if user.balance < amount:
@@ -43,8 +46,12 @@ class SimCardChargeAPIView(APIView):
                 simcard.save(update_fields=["balance"])
 
                 # Create transaction history
-                TransactionHistory.objects.create(
+                transaction_history = TransactionHistory.objects.create(
                     seller=user, simcard=simcard, amount=amount, type=TransactionHistory.TypeChoices.SIMCARD_CHARGE
+                )
+
+                SimCardChargeLogger.log_success(
+                    user_id, amount, simcard_number, user.balance, simcard.balance, transaction_history.pk
                 )
 
                 return Response(
@@ -58,6 +65,8 @@ class SimCardChargeAPIView(APIView):
                 )
 
         except ValidationError as e:
+            SimCardChargeLogger.log_validation_error(user_id, amount, simcard_number, e.detail)
             return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            SimCardChargeLogger.log_system_error(user_id, amount, simcard_number, str(e))
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

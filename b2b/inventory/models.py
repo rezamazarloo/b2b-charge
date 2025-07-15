@@ -1,7 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
-from .validators import validate_sim_number
+from utils.validators import validate_sim_number
 
 
 class SimCard(models.Model):

@@ -51,33 +51,36 @@ class CreditRequest(models.Model):
             and self.status == self.StatusChoices.COMPLETE
             and not old_instance.is_processed
         ):
-            with transaction.atomic():
-                locked_self = CreditRequest.objects.select_for_update().get(pk=self.pk)
+            try:
+                with transaction.atomic():
+                    locked_self = CreditRequest.objects.select_for_update().get(pk=self.pk)
 
-                if (
-                    locked_self.status == self.StatusChoices.PENDING
-                    and self.status == self.StatusChoices.COMPLETE
-                    and not locked_self.is_processed
-                ):
+                    if (
+                        locked_self.status == self.StatusChoices.PENDING
+                        and self.status == self.StatusChoices.COMPLETE
+                        and not locked_self.is_processed
+                    ):
 
-                    super().save(*args, **kwargs)
-                    user = User.objects.select_for_update().get(pk=self.user.pk)
-                    user.balance += self.amount
-                    user.save(update_fields=["balance"])
+                        super().save(*args, **kwargs)
+                        user = User.objects.select_for_update().get(pk=self.user.pk)
+                        user.balance += self.amount
+                        user.save(update_fields=["balance"])
 
-                    TransactionHistory.objects.create(
-                        seller=user,
-                        credit_request=self,
-                        amount=self.amount,
-                        type=TransactionHistory.TypeChoices.BALANCE_TOP_UP,
-                    )
+                        TransactionHistory.objects.create(
+                            seller=user,
+                            credit_request=self,
+                            amount=self.amount,
+                            type=TransactionHistory.TypeChoices.BALANCE_TOP_UP,
+                        )
 
-                    # Mark as processed
-                    self.is_processed = True
-                    super().save(update_fields=["is_processed"])
-                else:
-                    # If race condition caused re-check to fail, just save normally
-                    super().save(*args, **kwargs)
+                        # Mark as processed
+                        self.is_processed = True
+                        super().save(update_fields=["is_processed"])
+                    else:
+                        # If race condition caused re-check to fail, just save normally
+                        super().save(*args, **kwargs)
+            except Exception as e:
+                raise
         else:
             super().save(*args, **kwargs)
 
