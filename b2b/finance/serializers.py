@@ -16,4 +16,4 @@ class CreditRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditRequest
         fields = ["id", "amount", "status", "created_at"]
-        read_only_fields = ["id", "status", "is_processed", "created_at", "updated_at"]
+        read_only_fields = ["id", "status", "created_at"]

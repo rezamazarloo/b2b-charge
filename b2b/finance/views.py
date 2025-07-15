@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 from .serializers import CreditRequestSerializer
 
 
-class CreditRequestCreateView(generics.CreateAPIView):
+class CreditRequestCreateAPIView(generics.CreateAPIView):
     serializer_class = CreditRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
 

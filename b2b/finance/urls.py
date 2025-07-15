@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import CreditRequestCreateView
+from .views import CreditRequestCreateAPIView
 
 app_name = "finance"
 
 urlpatterns = [
-    path("credit-requests/", CreditRequestCreateView.as_view(), name="credit-requests"),
+    path("credit-requests/", CreditRequestCreateAPIView.as_view(), name="credit-requests-create"),
 ]
