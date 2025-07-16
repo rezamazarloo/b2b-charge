@@ -44,7 +44,6 @@ class CreditRequest(models.Model):
 
     def save(self, *args, **kwargs):
         if self._state.adding:
-            # create object
             super().save(*args, **kwargs)
             return
 
@@ -78,11 +77,9 @@ class CreditRequest(models.Model):
                             type=TransactionHistory.TypeChoices.BALANCE_TOP_UP,
                         )
 
-                        # Mark as processed
                         self.is_processed = True
                         super().save(update_fields=["is_processed"])
                     else:
-                        # If race condition caused re-check to fail, just save normally
                         super().save(*args, **kwargs)
             except Exception as e:
                 raise
