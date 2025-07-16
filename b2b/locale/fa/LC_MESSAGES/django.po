@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-15 17:30+0000\n"
+"POT-Creation-Date: 2025-07-17 01:47+0330\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
 #: account/users/admin.py:18
 msgid "Personal info"
 msgstr "اطلاعات شخصی"
@@ -41,8 +42,8 @@ msgstr "نام خانوادگی"
 msgid "balance"
 msgstr "موجودی"
 
-#: account/users/models.py:134 finance/models.py:20 finance/models.py:111
-#: inventory/models.py:17
+#: account/users/models.py:134 finance/models.py:24 finance/models.py:120
+#: inventory/models.py:22
 msgid "toman"
 msgstr "تومان"
 
@@ -70,13 +71,15 @@ msgstr "فعال"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr "مشخص می‌کند که آیا این کاربر باید به‌عنوان فعال در نظر گرفته شود. به‌جای حذف حساب، این گزینه را غیرفعال کنید."
+msgstr ""
+"مشخص می‌کند که آیا این کاربر باید به‌عنوان فعال در نظر گرفته شود. به‌جای حذف "
+"حساب، این گزینه را غیرفعال کنید."
 
 #: account/users/models.py:154
 msgid "date joined"
 msgstr "تاریخ عضویت"
 
-#: account/users/models.py:163 finance/models.py:17
+#: account/users/models.py:163 finance/models.py:18
 msgid "user"
 msgstr "کاربر"
 
@@ -88,55 +91,55 @@ msgstr "کاربران"
 msgid "status"
 msgstr "وضعیت"
 
-#: finance/admin.py:54 finance/models.py:112
+#: finance/admin.py:54 finance/models.py:123
 msgid "transaction type"
 msgstr "نوع تراکنش"
 
-#: finance/admin.py:68 finance/models.py:111
+#: finance/admin.py:68 finance/models.py:117
 msgid "amount"
 msgstr "مبلغ"
 
-#: finance/models.py:20
+#: finance/models.py:21
 msgid "requested amount"
 msgstr "مبلغ درخواستی"
 
-#: finance/models.py:23
+#: finance/models.py:28
 msgid "request status"
 msgstr "وضعیت درخواست"
 
-#: finance/models.py:25
+#: finance/models.py:30
 msgid "process status"
 msgstr "وضعیت پردازش"
 
-#: finance/models.py:26 finance/models.py:113 inventory/models.py:19
+#: finance/models.py:31 finance/models.py:124 inventory/models.py:25
 msgid "create date"
 msgstr "تاریخ ایجاد"
 
-#: finance/models.py:27 finance/models.py:114 inventory/models.py:20
+#: finance/models.py:32 finance/models.py:125 inventory/models.py:26
 msgid "update date"
 msgstr "تاریخ به‌روزرسانی"
 
-#: finance/models.py:30 finance/models.py:105
+#: finance/models.py:35 finance/models.py:110
 msgid "credit request"
 msgstr "درخواست اعتبار"
 
-#: finance/models.py:31
+#: finance/models.py:36
 msgid "credit requests"
 msgstr "درخواست‌های اعتبار"
 
-#: finance/models.py:91
+#: finance/models.py:96
 msgid "seller user"
 msgstr "کاربر فروشنده"
 
-#: finance/models.py:96
+#: finance/models.py:101
 msgid "simcard number"
 msgstr "شماره سیم‌کارت"
 
-#: finance/models.py:117
+#: finance/models.py:128
 msgid "transaction"
 msgstr "تراکنش"
 
-#: finance/models.py:118
+#: finance/models.py:129
 msgid "transactions"
 msgstr "تراکنش‌ها"
 
@@ -148,23 +151,23 @@ msgstr "حداقل مبلغ 1,000 تومان است"
 msgid "maximum amount is 100,000,000 Toman"
 msgstr "حداکثر مبلغ 100,000,000 تومان است"
 
-#: inventory/models.py:13
+#: inventory/models.py:14
 msgid "mobile number"
 msgstr "شماره موبایل"
 
-#: inventory/models.py:15
+#: inventory/models.py:16
 msgid "mobile number operator"
 msgstr "اپراتور شماره موبایل"
 
-#: inventory/models.py:17
+#: inventory/models.py:18
 msgid "simcard charge"
 msgstr "شارژ سیم‌کارت"
 
-#: inventory/models.py:23
+#: inventory/models.py:29
 msgid "sim card"
 msgstr "سیم‌کارت"
 
-#: inventory/models.py:24
+#: inventory/models.py:30
 msgid "sim cards"
 msgstr "سیم‌کارت‌ها"
 
@@ -184,22 +187,22 @@ msgstr "حداقل مبلغ شارژ 1,000 تومان است"
 msgid "sim card with this number does not exist"
 msgstr "شماره موبایل یافت نشد"
 
-#: inventory/validators.py:10
-msgid "SIM number must start with '09'."
-msgstr "شماره موبایل باید با '09' شروع شود."
-
-#: inventory/validators.py:13
-msgid "SIM number must be exactly 11 characters long."
-msgstr "شماره موبایل باید دقیقاً 11 کاراکتر باشد."
-
-#: inventory/validators.py:16
-msgid "SIM number must contain only digits."
-msgstr "شماره موبایل باید فقط شامل ارقام باشد."
-
-#: inventory/views.py:35
+#: inventory/views.py:38
 msgid "insufficient account balance"
 msgstr "موجودی حساب کافی نیست"
 
-#: inventory/views.py:52
+#: inventory/views.py:59
 msgid "successfully charged simcard"
 msgstr "سیم‌کارت با موفقیت شارژ شد"
+
+#: utils/validators.py:10
+msgid "SIM number must start with '09'."
+msgstr "شماره موبایل باید با '09' شروع شود."
+
+#: utils/validators.py:13
+msgid "SIM number must be exactly 11 characters long."
+msgstr "شماره موبایل باید دقیقاً 11 کاراکتر باشد."
+
+#: utils/validators.py:16
+msgid "SIM number must contain only digits."
+msgstr "شماره موبایل باید فقط شامل ارقام باشد."

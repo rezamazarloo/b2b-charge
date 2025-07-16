@@ -7,6 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/finance/", include("finance.urls", namespace="finance")),
     path("api/simcards/", include("inventory.urls", namespace="inventory")),
+    path("api/account/", include("account.urls", namespace="account")),
 ]
 
 if settings.DEBUG:
