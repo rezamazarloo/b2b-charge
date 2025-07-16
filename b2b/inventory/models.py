@@ -1,6 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator
 from utils.validators import validate_sim_number
 
 
@@ -14,7 +15,12 @@ class SimCard(models.Model):
     )
     operator = models.CharField(verbose_name=_("mobile number operator"), max_length=3, choices=OperatorChoices.choices)
     balance = models.DecimalField(
-        verbose_name=_("simcard charge"), max_digits=12, decimal_places=0, default=Decimal("0"), help_text=_("toman")
+        verbose_name=_("simcard charge"),
+        max_digits=12,
+        decimal_places=0,
+        default=Decimal("0"),
+        help_text=_("toman"),
+        validators=[MinValueValidator(Decimal("0"))],
     )
     created_at = models.DateTimeField(verbose_name=_("create date"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("update date"), auto_now=True)

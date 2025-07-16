@@ -2,6 +2,7 @@ from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
+from django.core.validators import MinValueValidator
 from inventory.models import SimCard
 
 User = get_user_model()
@@ -17,7 +18,11 @@ class CreditRequest(models.Model):
         User, verbose_name=_("user"), on_delete=models.CASCADE, related_name="user_credit_requests"
     )
     amount = models.DecimalField(
-        verbose_name=_("requested amount"), max_digits=12, decimal_places=0, help_text=_("toman")
+        verbose_name=_("requested amount"),
+        max_digits=12,
+        decimal_places=0,
+        help_text=_("toman"),
+        validators=[MinValueValidator(Decimal("0"))],
     )
     status = models.CharField(
         verbose_name=_("request status"), max_length=8, choices=StatusChoices.choices, default=StatusChoices.PENDING
@@ -111,7 +116,13 @@ class TransactionHistory(models.Model):
         blank=True,
         default=None,
     )
-    amount = models.DecimalField(verbose_name=_("amount"), max_digits=12, decimal_places=0, help_text=_("toman"))
+    amount = models.DecimalField(
+        verbose_name=_("amount"),
+        max_digits=12,
+        decimal_places=0,
+        help_text=_("toman"),
+        validators=[MinValueValidator(Decimal("0"))],
+    )
     type = models.CharField(verbose_name=_("transaction type"), max_length=15, choices=TypeChoices.choices)
     created_at = models.DateTimeField(verbose_name=_("create date"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("update date"), auto_now=True)
