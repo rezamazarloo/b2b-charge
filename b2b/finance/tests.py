@@ -56,9 +56,9 @@ class CreditRequestAndSimcardChargeFlowTest(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
                     success_count += 1
                 else:
-                    if response.status_code == 200:
+                    if response.status_code == status.HTTP_200_OK:
                         success_count += 1
-                    elif response.status_code == 400:
+                    elif response.status_code == status.HTTP_400_BAD_REQUEST:
                         self.assertIn("amount", response.json())
 
             print(f"User: {user.email} succeeded in {success_count}/1000 charges.")
