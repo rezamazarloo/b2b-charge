@@ -97,6 +97,12 @@ DATABASES = {
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
         "HOST": os.getenv("POSTGRES_HOST", "postgresdb"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "CONN_HEALTH_CHECKS": True,
+        "OPTIONS": {
+            "connect_timeout": 10,
+        },
+        # Connection pooling settings
+        "CONN_MAX_AGE": 0,  # IMPORTANT: Must be 0 with PgBouncer in transaction mode
     }
 }
 

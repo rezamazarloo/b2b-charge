@@ -14,11 +14,34 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgresdb
+      - pgbouncer
     command: >
       sh -c "python manage.py migrate &&
             python manage.py compilemessages &&
             python manage.py runserver 0.0.0.0:8000"
+  pgbouncer:
+    image: bitnami/pgbouncer:1.24.0
+    environment:
+      - POSTGRESQL_HOST=postgresdb
+      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRES_DB}
+      - PGBOUNCER_DATABASE=${POSTGRES_DB}
+      - PGBOUNCER_PORT=6432
+      - PGBOUNCER_POOL_MODE=transaction
+      - PGBOUNCER_MAX_CLIENT_CONN=1000
+      - PGBOUNCER_DEFAULT_POOL_SIZE=25
+      - PGBOUNCER_RESERVE_POOL_SIZE=5
+      - PGBOUNCER_SERVER_ROUND_ROBIN=1
+      - PGBOUNCER_AUTH_TYPE=trust
+    ports:
+      - "6432:6432"
+    # don't expose db port for production
+    env_file:
+      - .env
+    depends_on:
+      - postgresdb
   postgresdb:
     image: postgres:17.5
     volumes:
@@ -28,6 +51,12 @@ services:
       - 5432:5432
     env_file:
       - .env
+    command: >
+      postgres
+      -c max_connections=100
+      -c shared_buffers=512MB
+    # shared_buffers > 1GB for production (default is 128MB)
+    # max_connections should be lower when using PgBouncer
   locust:
     image: locustio/locust:2.37.13
     ports:
